@@ -37,31 +37,63 @@ namespace ControleDeContatos.Controllers
 
         public IActionResult Apagar(int id)
         {
-           
-            _contatosRepositorio.Apagar(id);
-            return RedirectToAction("Index");
+
+            try
+            {
+                _contatosRepositorio.Apagar(id);
+                TempData["MensagemSucesso"] = "Contato Cadastrado com sucesso";
+                return RedirectToAction("Index");
+            }
+            catch (System.Exception erro)
+            {
+
+                TempData["MensagemErro"] = $"Contato não Cadastrado, detalhe do erro: {erro.Message} ";
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpPost]
 
         public IActionResult Criar(ContatoModel contato)
         {
-            if (ModelState.IsValid)
+           
+            try
             {
-                _contatosRepositorio.Adicionar(contato);
+                if (ModelState.IsValid)
+                {
+                    _contatosRepositorio.Adicionar(contato);
+                    TempData["MensagemSucesso"] = "Contato Cadastrado com sucesso";
+                    return RedirectToAction("Index");
+                }
+                return View(contato);
+            }
+            catch (System.Exception erro)
+            {
+
+                TempData["MensagemErro"] = $"Contato não Cadastrado, detalhe do erro: {erro.Message} ";
                 return RedirectToAction("Index");
             }
-            return View(contato);
+          
         }
         [HttpPost]
         public IActionResult Alterar(ContatoModel contato)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _contatosRepositorio.Atualizar(contato);
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    _contatosRepositorio.Atualizar(contato);
+                    TempData["MensagemSucesso"] = "Contato Cadastrado com sucesso";
+                    return RedirectToAction("Index");
+                }
+                return View("Editar", contato);
             }
-            return View("Editar", contato);
+            catch (System.Exception erro)
+            {
+
+                TempData["MensagemErro"] = $"Contato não Cadastrado, detalhe do erro: {erro.Message} ";
+                return View("Editar", contato);
+            }
         }
     }
 }
